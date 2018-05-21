@@ -1,11 +1,12 @@
-const React = require("react");
-const uniqid = require('uniqid');
-
+import React from 'react';
+import config from './config';
+import uniqid from 'uniqid';
+import './Chat.css';
 class Chat extends React.Component {
 
   constructor(props) {
     super(props);
-    const SERVER_ADDRESS = 'http://127.0.0.1:3001';
+    const SERVER_ADDRESS = config.SERVER_ADDRESS;
     this.socket = window.io(SERVER_ADDRESS);
     this.state = {
       messages: {},
@@ -87,7 +88,6 @@ class Chat extends React.Component {
       this.setState({
         messages : newMessages
       })
-
     }
 
   }
@@ -233,8 +233,7 @@ class Chat extends React.Component {
           {this.renderConnected()}
           <div className="connected-users">
 
-            <label >Connected Users ( { (this.state.usernames.length === 0) ? 0 : this.state.usernames.length - 1  }
-              ) :
+            <label >Connected Users ( { (this.state.usernames.length === 0) ? 0 : this.state.usernames.length - 1  } ) :
             </label>
             {usernames}
           </div>

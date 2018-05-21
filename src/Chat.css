@@ -18,6 +18,10 @@ body{
 box-shadow: 3px 0px 5px 0px rgba(133,133,133,1);
 }
 
+.side-bar a {
+    cursor: pointer;
+}
+
 .connected-users {
     margin-top: 1em ;
 
