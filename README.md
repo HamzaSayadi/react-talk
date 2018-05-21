@@ -2,7 +2,7 @@
 
 ## Instructions :
 ### front-end side
-- npm run install
+- npm install
 - npm run start
 - go to localhost:3000
 
