@@ -1,6 +1,5 @@
-import $ from 'jquery';
 const React = require("react");
-var uniqid = require('uniqid');
+const uniqid = require('uniqid');
 
 class Chat extends React.Component {
 
@@ -26,18 +25,16 @@ class Chat extends React.Component {
 
   componentDidMount() {
 
-    var self = this;
-
-    this.socket.on("usernames", function(msg) {
-      self.setState({usernames: msg});
+    this.socket.on("usernames", (msg) => {
+      this.setState({usernames: msg});
     });
 
-    this.socket.on('message', function(data) {
+    this.socket.on('message', (data) => {
 
       let newMessages = {
-        ...self.state.messages
+        ...this.state.messages
       }
-      let newChatboxes = [...self.state.chatboxes]
+      let newChatboxes = [...this.state.chatboxes]
 
       if (newMessages[data.from.name] === undefined) {
         newMessages[data.from.name] = []
@@ -51,13 +48,13 @@ class Chat extends React.Component {
       } else {
         newMessages[data.from.name].push({msg: data.message, from: data.from})
 
-        if (!self.checkboxExists(data.from, self.state.chatboxes) && (data.self !== true)) {
+        if (!this.checkboxExists(data.from, this.state.chatboxes) && (data.self !== true)) {
           newChatboxes.push({name: data.from.name, id: data.from.id});
         }
 
       }
 
-      self.setState({messages: newMessages, chatboxes: newChatboxes})
+      this.setState({messages: newMessages, chatboxes: newChatboxes})
 
     });
 
@@ -120,10 +117,14 @@ class Chat extends React.Component {
 
   //closing a chatbox
   closeChatBox(cb) {
+    let newChatboxes = this.state.chatboxes;
+    newChatboxes = newChatboxes.filter((item) => {
+        return item.id !== cb.id
+    })
 
-    const newChatboxes = this.state.chatboxes;
-    newChatboxes.splice($.inArray(cb, newChatboxes), 1);
-    this.setState({chatboxes: newChatboxes});
+    this.setState({
+      chatboxes: newChatboxes
+    });
   }
 
   renderConnected() {
@@ -154,18 +155,16 @@ class Chat extends React.Component {
   }
   render() {
 
-    var self = this;
-
-    //Render connected users
+    // Render connected users
     let i = 0;
-    var usernames = this.state.usernames.map(function(user) {
+    var usernames = this.state.usernames.map((user) => {
       i++;
-      if (user.id !== self.state.user.id) {
+      if (user.id !== this.state.user.id) {
         return (
           <div key={i} className="sidebar-name">
             <a>
               <img width="30" height="30" alt="profile_image" src="https://upload.wikimedia.org/wikipedia/commons/d/d3/User_Circle.png"/>
-              <span onClick={() => self.chatWith(user)}>
+              <span onClick={() => this.chatWith(user)}>
                 {user.name}
               </span>
             </a>
@@ -179,14 +178,14 @@ class Chat extends React.Component {
     let j = 1;
 
     //Render Chatboxes
-    var chatboxes = self.state.chatboxes.map(function(cb) {
+    var chatboxes = this.state.chatboxes.map((cb) => {
       let divStyle = {
         right: j*220
       };
       j++;
       let privatmessages;
-      if (typeof self.state.messages[cb.name] !== 'undefined') {
-        privatmessages = self.state.messages[cb.name].map(function(msg, index) {
+      if (typeof this.state.messages[cb.name] !== 'undefined') {
+        privatmessages = this.state.messages[cb.name].map(function(msg, index) {
           return <div key={index}>
             {msg.from.name}
             : {msg.msg}
@@ -201,12 +200,12 @@ class Chat extends React.Component {
       return (
         <div key={chatboxId} className="chatbox" style={divStyle}>
           <div className="head">Chat with {cb.name}
-            <span onClick={() => self.closeChatBox(cb)} style={{
+            <span onClick={() => this.closeChatBox(cb)} style={{
               marginLeft: "10px"
             }} className="popup-head-right">
               X
             </span>
-            <span onClick={self.minmizeChatBox} className="popup-head-right">
+            <span onClick={this.minmizeChatBox} className="popup-head-right">
               -
             </span>
           </div>
@@ -218,7 +217,7 @@ class Chat extends React.Component {
             </div>
             <div className="chat-on">
               <input id={cb} type="text"/>
-              <button onClick={() => self.sendTo(cb)}>
+              <button onClick={() => this.sendTo(cb)}>
                 Send
               </button>
             </div>

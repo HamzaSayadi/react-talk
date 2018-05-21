@@ -19,15 +19,11 @@ io.sockets.on("connection", function(socket) {
     users[socket.user] = socket;
     nicknames.push(socket.user);
     socket.join(data.id);
-    console.log('joining room  :  ', data);
     updateNicknames();
-
   })
 
 
   socket.on('send', function(data) {
-    console.log('sending message  :   ', data);
-
     data["self"] = false
     io.sockets.in(data.to.id).emit('message', data);
 
